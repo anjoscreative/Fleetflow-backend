@@ -23,8 +23,11 @@ import { ShipmentModule } from './shipment/shipment.module';
         type: 'postgres',
         url: config.get<string>('DATABASE_URL'), // read from .env
         autoLoadEntities: true, // automatically loads entities registered in any module
-        synchronize: true, // ❗ only for dev — auto-creates tables from entities
-       // dropSchema: true,
+        synchronize: false, // ❗ only for dev — auto-creates tables from entities
+        // dropSchema: true,
+        migrations: [__dirname + '/migrations/**/*{.ts,.js}'],
+        migrationsRun: true,
+
         ssl:
           process.env.NODE_ENV === 'production'
             ? { rejectUnauthorized: false }

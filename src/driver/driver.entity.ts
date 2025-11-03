@@ -6,7 +6,7 @@ import {
   JoinColumn,
 } from 'typeorm';
 import { User } from '../entities/user.entity';
-import { Vehicle } from 'src/vehicle/vehicle.entity';
+import { Vehicle } from '../vehicle/vehicle.entity';
 
 /**
  * Driver entity extends the base user with logistics-related info.

@@ -5,7 +5,7 @@ import {
   ManyToOne,
   OneToOne,
 } from 'typeorm';
-import { Driver } from 'src/driver/driver.entity';
+import { Driver } from '../driver/driver.entity';
 
 /**
  * Vehicle represents a transport asset owned by the logistics company.
