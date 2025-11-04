@@ -1,4 +1,11 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { Driver } from '../driver/driver.entity';
 import { Vehicle } from '../vehicle/vehicle.entity';
 import { Warehouse } from '../warehouse/warehouse.entity';
@@ -41,4 +48,10 @@ export class Shipment {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @Column({ type: 'timestamp', nullable: true })
+  expectedDeliveryAt?: Date;
+
+  @Column({ type: 'timestamp', nullable: true })
+  deliveredAt?: Date;
 }

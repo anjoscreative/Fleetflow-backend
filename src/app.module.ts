@@ -10,6 +10,7 @@ import { VehicleModule } from './vehicle/vehicle.module';
 import { WarehouseModule } from './warehouse/warehouse.module';
 import { ShipmentModule } from './shipment/shipment.module';
 // import { RedisModule } from './redis/redis.module';
+import { IntegrationsModule } from './integrations/integrations.module';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { ShipmentModule } from './shipment/shipment.module';
     DriverModule,
     WarehouseModule,
     ShipmentModule,
+    IntegrationsModule,
   ],
   controllers: [HealthController, UserController],
 })
