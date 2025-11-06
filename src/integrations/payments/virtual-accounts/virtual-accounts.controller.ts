@@ -54,38 +54,52 @@ export class VirtualAccountsController {
     return this.virtualAccountsService.getTransactions(id);
   }
 
-  // 🔐 Real Paystack Webhook Endpoint
+  // 🔐 Real Paystack Webhook Endpoint (safe & production-ready)
   @Post('webhook/paystack')
   @HttpCode(HttpStatus.OK)
   async paystackWebhook(
-    @Req() req: Request,
+    @Req() req: Request & { rawBody?: string }, // rawBody added in main.ts
     @Headers('x-paystack-signature') signature: string,
   ) {
     const secret = process.env.PAYSTACK_SECRET_KEY || '';
 
+    // ✅ Use rawBody if available, else fall back to JSON-stringified body
+    const raw = req.rawBody || JSON.stringify(req.body) || '';
+
+    if (!raw) {
+      console.error('⚠️ Empty webhook body received');
+      return { message: 'Invalid payload' };
+    }
+
+    // ✅ Safely compute signature
     const computed = crypto
       .createHmac('sha512', secret)
-      .update(JSON.stringify(req.body))
+      .update(raw)
       .digest('hex');
 
     if (computed !== signature) {
-      console.warn('⚠️ Webhook signature mismatch');
+      console.warn('⚠️ Invalid Paystack webhook signature');
       return { message: 'Invalid signature' };
     }
 
     const event = req.body;
+    const data = event.data;
 
-    // Handle relevant Paystack events
-    if (
-      event.event === 'dedicatedaccount.assign.success' ||
-      event.event === 'charge.success'
-    ) {
-      console.log('✅ Verified Paystack event:', event.event);
+    if (event.event === 'charge.success') {
+      const deposit = {
+        accountNumber:
+          data.authorization?.receiver_bank_account_number ||
+          data.metadata?.account_number,
+        amount: data.amount / 100, // Paystack sends in kobo
+        currency: data.currency,
+        reference: data.reference,
+      };
 
-      // Example: Record a transaction
-      // await this.virtualAccountsService.handlePaystackEvent(event);
+      await this.virtualAccountsService.recordWebhookDeposit(deposit);
+      console.log('✅ Recorded deposit for', deposit.accountNumber);
     }
 
-    return { message: 'Webhook received' };
+    console.log('✅ Verified Paystack event:', event.event);
+    return { message: 'Webhook processed successfully' };
   }
 }

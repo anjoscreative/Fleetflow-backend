@@ -1,4 +1,9 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+} from 'typeorm';
 
 /**
  * VirtualAccount entity stores all generated virtual accounts.
@@ -29,4 +34,7 @@ export class VirtualAccount {
 
   @CreateDateColumn()
   createdAt: Date;
+
+  @Column({ type: 'float', default: 0 })
+  balance: number;
 }

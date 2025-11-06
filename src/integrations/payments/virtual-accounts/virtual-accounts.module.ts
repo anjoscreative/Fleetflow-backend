@@ -5,9 +5,10 @@ import { VirtualAccountsController } from './virtual-accounts.controller';
 import { VirtualAccount } from './virtual-account.entity';
 import { HttpModule } from '@nestjs/axios';
 import { Transaction } from './transaction.entity';
+import { SmsModule } from 'src/integrations/sms/sms.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([VirtualAccount, Transaction]), HttpModule],
+  imports: [TypeOrmModule.forFeature([VirtualAccount, Transaction]), HttpModule, SmsModule],
   providers: [VirtualAccountsService],
   controllers: [VirtualAccountsController]
 })
